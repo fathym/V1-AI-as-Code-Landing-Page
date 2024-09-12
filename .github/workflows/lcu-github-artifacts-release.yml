@@ -105,6 +105,13 @@ jobs:
         if: ${{ !!env.BuildCommand && steps.package_json_exists.outputs.files_exists == 'true' }}
         run: ${{ env.BuildCommand }}
 
+      # publish github artifacts
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.event.organization.name }}-${{ github.event.repository.name }}-${{ github.run_id }}-${{ github.sha }}
+          path: ${{ env.Output }}
+
       # bump version and push tag
       - name: Bump version and push tag
         uses: fathym/github-tag-action@master
@@ -124,17 +131,4 @@ jobs:
           webhook_url: ${{ secrets.LCU_WEBHOOK_URL }}
           webhook_secret: ${{ secrets.LCU_WEBHOOK_SECRET }}
           data: '{ "EnterpriseLookup": "${{ secrets.LCU_ENTERPRISE_LOOKUP }}", "Username": "${{ secrets.LCU_USERNAME }}" }'
-  upload:
-    name: Generate Build Artifacts
-    strategy:
-      matrix:
-        runs-on: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.runs-on }}
-    steps:
-      # publish github artifacts
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ github.event.organization.name }}-${{ github.event.repository.name }}-${{ matrix.runs-on }}
-          path: ${{ env.Output }}
 
