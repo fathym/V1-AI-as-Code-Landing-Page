@@ -107,9 +107,9 @@ jobs:
 
       # publish github artifacts
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
-          name: ${{ github.event.organization.name }}-${{ github.event.repository.name }}-${{ github.run_id }}-${{ github.sha }}
+          name: ${{ github.event.organization.name }}-${{ github.event.repository.name }}
           include-hidden-files: true
           path: ${{ env.Output }}
 
